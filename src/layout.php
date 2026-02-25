@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /** @var string $action */
 /** @var array<string,string> $allowedTypes */
 /** @var string|null $message */

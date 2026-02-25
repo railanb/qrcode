@@ -15,6 +15,25 @@ Acesse:
 - `http://localhost:8000/?action=generate`
 - `http://localhost:8000/?action=my-codes`
 
+## Rodar com Docker (PHP 7.4)
+Com Docker Compose:
+```bash
+docker compose up --build
+```
+
+Acesse:
+- `http://localhost:8000/?action=generate`
+- `http://localhost:8000/?action=my-codes`
+
+Parar containers:
+```bash
+docker compose down
+```
+
+Observacoes:
+- `storage/` e `public/uploads/` estao mapeados como volume (persistem no host).
+- A imagem usa `php:7.4-cli` e executa servidor embutido em `0.0.0.0:8000`.
+
 ## Funcionalidades
 - Gerar QRCode por tipo: `Texto`, `Pagina HTML / URL`, `PDF`, `Imagem`
 - Para `PDF` e `Imagem`: aceita URL manual ou upload de arquivo local
