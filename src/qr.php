@@ -2,15 +2,51 @@
 
 declare(strict_types=1);
 
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
+
 const MAX_UPLOAD_SIZE_BYTES = 5242880;
 
 function generate_qr_urls(string $payload): array
 {
-    $encoded = rawurlencode($payload);
+    $baseName = date('YmdHis') . '_' . bin2hex(random_bytes(4));
+    $pngName = $baseName . '.png';
+    $svgName = $baseName . '.svg';
+    $generatedDir = get_generated_dir();
+
+    ensure_directory($generatedDir);
+
+    $pngOptions = new QROptions([
+        'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+        'eccLevel' => QRCode::ECC_M,
+        'scale' => 10,
+        'imageBase64' => false,
+    ]);
+
+    $svgOptions = new QROptions([
+        'outputType' => QRCode::OUTPUT_MARKUP_SVG,
+        'eccLevel' => QRCode::ECC_M,
+        'scale' => 6,
+        'imageBase64' => false,
+    ]);
+
+    $pngData = (new QRCode($pngOptions))->render($payload);
+    $svgData = (new QRCode($svgOptions))->render($payload);
+
+    $pngPath = $generatedDir . DIRECTORY_SEPARATOR . $pngName;
+    $svgPath = $generatedDir . DIRECTORY_SEPARATOR . $svgName;
+
+    if (file_put_contents($pngPath, $pngData) === false) {
+        throw new RuntimeException('Falha ao salvar o arquivo PNG do QRCode.');
+    }
+
+    if (file_put_contents($svgPath, $svgData) === false) {
+        throw new RuntimeException('Falha ao salvar o arquivo SVG do QRCode.');
+    }
 
     return [
-        'preview_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=420x420&format=png&data=' . $encoded,
-        'svg_url' => 'https://api.qrserver.com/v1/create-qr-code/?size=420x420&format=svg&data=' . $encoded,
+        'preview_url' => build_public_asset_url('generated/' . rawurlencode($pngName)),
+        'svg_url' => build_public_asset_url('generated/' . rawurlencode($svgName)),
     ];
 }
 
@@ -101,9 +137,7 @@ function store_uploaded_file(string $type, array $file): array
     $extension = $validation['extension'];
 
     $uploadDir = get_upload_dir();
-    if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
-        throw new RuntimeException('Nao foi possivel criar a pasta de uploads.');
-    }
+    ensure_directory($uploadDir);
 
     $storedName = date('YmdHis') . '_' . bin2hex(random_bytes(4)) . '.' . $extension;
     $destination = $uploadDir . DIRECTORY_SEPARATOR . $storedName;
@@ -173,7 +207,17 @@ function get_upload_dir(): string
     return dirname(__DIR__) . '/public/uploads';
 }
 
+function get_generated_dir(): string
+{
+    return dirname(__DIR__) . '/public/generated';
+}
+
 function build_upload_public_url(string $storedName): string
+{
+    return build_public_asset_url('uploads/' . rawurlencode($storedName));
+}
+
+function build_public_asset_url(string $relativePath): string
 {
     $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
     $scheme = $isHttps ? 'https' : 'http';
@@ -181,7 +225,39 @@ function build_upload_public_url(string $storedName): string
     $scriptName = str_replace('\\', '/', (string)($_SERVER['SCRIPT_NAME'] ?? '/index.php'));
     $basePath = rtrim(str_replace('/index.php', '', $scriptName), '/');
 
-    return $scheme . '://' . $host . $basePath . '/uploads/' . rawurlencode($storedName);
+    return $scheme . '://' . $host . $basePath . '/' . ltrim($relativePath, '/');
+}
+
+function ensure_directory(string $dir): void
+{
+    if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
+        throw new RuntimeException('Nao foi possivel criar o diretorio: ' . $dir);
+    }
+}
+
+function delete_generated_assets(array $record): void
+{
+    foreach (['preview_url', 'svg_url'] as $key) {
+        $url = (string)($record[$key] ?? '');
+        if ($url === '') {
+            continue;
+        }
+
+        $path = (string)parse_url($url, PHP_URL_PATH);
+        if ($path === '' || strpos($path, '/generated/') === false) {
+            continue;
+        }
+
+        $filename = basename($path);
+        if ($filename === '' || preg_match('/^[a-zA-Z0-9_.-]+$/', $filename) !== 1) {
+            continue;
+        }
+
+        $fullPath = get_generated_dir() . DIRECTORY_SEPARATOR . $filename;
+        if (is_file($fullPath)) {
+            @unlink($fullPath);
+        }
+    }
 }
 
 function upload_error_message(int $error): string

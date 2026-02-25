@@ -1,6 +1,6 @@
 ﻿:root {
-    --bg: #f7f8fc;
-    --bg-2: #eceff9;
+    --bg: #ffffff;
+    --bg-2: #ffffff;
     --card: #ffffff;
     --text: #1d2433;
     --muted: #6f7890;
@@ -17,17 +17,13 @@
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: 'Space Grotesk', sans-serif;
-    background: radial-gradient(circle at 0% 0%, var(--bg-2), var(--bg));
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
     color: var(--text);
 }
 
 .bg-shape {
-    position: fixed;
-    border-radius: 999px;
-    filter: blur(60px);
-    z-index: -1;
-    opacity: 0.4;
+    display: none;
 }
 
 .bg-1 {
@@ -151,18 +147,19 @@ select:focus {
     align-items: center;
     justify-content: center;
     margin-top: 14px;
-    border: 0;
+    border: 1px solid #000;
     border-radius: 12px;
     padding: 10px 14px;
     text-decoration: none;
     cursor: pointer;
     color: #fff;
-    background: linear-gradient(120deg, var(--primary), var(--primary-2));
+    background: #000;
 }
 
-.btn.ghost {
-    background: #e9efff;
-    color: #11306d;
+.btn:hover,
+.btn:focus-visible {
+    background: #111;
+    color: #fff;
 }
 
 .btn.tiny {
@@ -173,7 +170,12 @@ select:focus {
 }
 
 .btn.danger {
-    background: var(--danger);
+    background: #000;
+}
+
+.btn.ghost {
+    background: #000;
+    color: #fff;
 }
 
 .preview img {

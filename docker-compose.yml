@@ -7,5 +7,6 @@ services:
     volumes:
       - ./storage:/app/storage
       - ./public/uploads:/app/public/uploads
+      - ./public/generated:/app/public/generated
     restart: unless-stopped
 

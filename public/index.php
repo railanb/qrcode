@@ -7,6 +7,7 @@ $action = $_GET['action'] ?? 'generate';
 $message = null;
 $error = null;
 $generated = null;
+$previewCode = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (($action === 'generate') && isset($_POST['create_qr'])) {
@@ -16,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             if (!in_array($type, ['text', 'link', 'pdf', 'image'], true)) {
-                throw new RuntimeException('Tipo de QRCode invalido.');
+                throw new RuntimeException('Tipo de QRCode inválido.');
             }
 
             $payloadData = build_qr_payload($type, $payloadInput, is_array($uploadedFile) ? $uploadedFile : []);
@@ -35,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
 
             save_code($record);
-            $generated = $record;
-            $message = 'QRCode gerado e salvo com sucesso.';
+            header('Location: ?action=preview&id=' . rawurlencode((string)$record['id']));
+            exit;
         } catch (Throwable $e) {
             $error = $e->getMessage();
         }
@@ -49,11 +50,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+if ($action === 'preview') {
+    $previewId = trim((string)($_GET['id'] ?? ''));
+    if ($previewId === '') {
+        $error = 'QRCode nao encontrado.';
+    } else {
+        $previewCode = get_code_by_id($previewId);
+        if ($previewCode === null) {
+            $error = 'QRCode nao encontrado.';
+        }
+    }
+}
+
 $codes = get_codes();
 
 $allowedTypes = [
     'text' => 'Texto',
-    'link' => 'Pagina HTML / URL',
+    'link' => 'Página HTML / URL',
     'pdf' => 'PDF (URL ou Upload)',
     'image' => 'Imagem (URL ou Upload)',
 ];

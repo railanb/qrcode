@@ -1,0 +1,9 @@
+{
+  "name": "qrcode/studio",
+  "description": "Gerador de QRCode offline em PHP",
+  "type": "project",
+  "require": {
+    "php": "^7.4",
+    "chillerlan/php-qrcode": "^4.4"
+  }
+}

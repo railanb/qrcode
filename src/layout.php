@@ -3,7 +3,7 @@
 /** @var array<string,string> $allowedTypes */
 /** @var string|null $message */
 /** @var string|null $error */
-/** @var array|null $generated */
+/** @var array|null $previewCode */
 /** @var array $codes */
 ?>
 <!doctype html>
@@ -11,10 +11,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>QRCode Studio</title>
+    <title>QRCode Studio Zanoello</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -24,12 +24,12 @@
 <main class="container">
     <header class="topbar">
         <div>
-            <h1>QRCode Studio</h1>
+            <h1>QRCode Studio Zanoello</h1>
             <p>Gerador de QRCode com historico, upload de arquivos e exportacao em SVG.</p>
         </div>
         <nav>
             <a class="<?= $action === 'generate' ? 'active' : '' ?>" href="?action=generate">Gerar QRCode</a>
-            <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codes</a>
+            <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codigos</a>
         </nav>
     </header>
 
@@ -42,8 +42,8 @@
     <?php endif; ?>
 
     <?php if ($action === 'generate'): ?>
-        <section class="card grid">
-            <form method="post" class="panel" enctype="multipart/form-data">
+        <section class="card panel">
+            <form method="post" enctype="multipart/form-data">
                 <h2>Novo QRCode</h2>
                 <label for="type">Tipo</label>
                 <select name="type" id="type" required>
@@ -64,30 +64,34 @@
 
                 <button class="btn" type="submit" name="create_qr" value="1">Gerar e Salvar</button>
             </form>
+        </section>
+    <?php endif; ?>
 
-            <aside class="panel preview">
-                <h2>Preview</h2>
-                <?php if ($generated !== null): ?>
-                    <img src="<?= htmlspecialchars((string)$generated['preview_url'], ENT_QUOTES, 'UTF-8') ?>" alt="QRCode gerado">
-                    <div class="actions">
-                        <a class="btn ghost" href="<?= htmlspecialchars((string)$generated['preview_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Abrir PNG</a>
-                        <a class="btn ghost" href="<?= htmlspecialchars((string)$generated['svg_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Exportar SVG</a>
-                    </div>
-                    <p><strong>Origem:</strong> <?= htmlspecialchars(((string)($generated['source'] ?? 'manual')) === 'upload' ? 'Upload' : 'URL/Texto', ENT_QUOTES, 'UTF-8') ?></p>
-                    <?php if (!empty($generated['uploaded_filename'])): ?>
-                        <p><strong>Arquivo:</strong> <?= htmlspecialchars((string)$generated['uploaded_filename'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <?php endif; ?>
-                    <pre><?= htmlspecialchars((string)$generated['payload'], ENT_QUOTES, 'UTF-8') ?></pre>
-                <?php else: ?>
-                    <p class="muted">O QRCode gerado aparece aqui.</p>
+    <?php if ($action === 'preview'): ?>
+        <section class="card panel preview">
+            <h2>Preview</h2>
+            <?php if ($previewCode !== null): ?>
+                <img src="<?= htmlspecialchars((string)$previewCode['preview_url'], ENT_QUOTES, 'UTF-8') ?>" alt="QRCode gerado">
+                <div class="actions">
+                    <a class="btn ghost" href="<?= htmlspecialchars((string)$previewCode['preview_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Abrir PNG</a>
+                    <a class="btn ghost" href="<?= htmlspecialchars((string)$previewCode['svg_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">Exportar SVG</a>
+                    <a class="btn" href="?action=generate">Voltar</a>
+                </div>
+                <p><strong>Origem:</strong> <?= htmlspecialchars(((string)($previewCode['source'] ?? 'manual')) === 'upload' ? 'Upload' : 'URL/Texto', ENT_QUOTES, 'UTF-8') ?></p>
+                <?php if (!empty($previewCode['uploaded_filename'])): ?>
+                    <p><strong>Arquivo:</strong> <?= htmlspecialchars((string)$previewCode['uploaded_filename'], ENT_QUOTES, 'UTF-8') ?></p>
                 <?php endif; ?>
-            </aside>
+                <pre><?= htmlspecialchars((string)$previewCode['payload'], ENT_QUOTES, 'UTF-8') ?></pre>
+            <?php else: ?>
+                <p class="muted">Nenhum QRCode para exibir.</p>
+                <a class="btn" href="?action=generate">Voltar</a>
+            <?php endif; ?>
         </section>
     <?php endif; ?>
 
     <?php if ($action === 'my-codes'): ?>
         <section class="card panel">
-            <h2>Meus Codes</h2>
+            <h2>Meus Codigos</h2>
             <?php if ($codes === []): ?>
                 <p class="muted">Nenhum QRCode salvo ainda.</p>
             <?php else: ?>
@@ -121,6 +125,7 @@
                                     <div class="actions inline">
                                         <a class="btn tiny" href="<?= htmlspecialchars((string)$item['preview_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">PNG</a>
                                         <a class="btn tiny" href="<?= htmlspecialchars((string)$item['svg_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">SVG</a>
+                                        <a class="btn tiny" href="?action=preview&id=<?= rawurlencode((string)$item['id']) ?>">Preview</a>
                                         <form method="post" onsubmit="return confirm('Remover este QRCode?');">
                                             <input type="hidden" name="delete_id" value="<?= htmlspecialchars((string)$item['id'], ENT_QUOTES, 'UTF-8') ?>">
                                             <button type="submit" class="btn tiny danger">Excluir</button>

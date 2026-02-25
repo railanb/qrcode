@@ -32,25 +32,52 @@ function save_code(array $record): void
     write_codes($codes);
 }
 
+function get_code_by_id(string $id): ?array
+{
+    if ($id === '') {
+        return null;
+    }
+
+    foreach (get_codes() as $code) {
+        if ((string)($code['id'] ?? '') === $id) {
+            return $code;
+        }
+    }
+
+    return null;
+}
+
 function delete_code(string $id): void
 {
     $codes = get_codes();
+    $toDelete = null;
+
+    foreach ($codes as $item) {
+        if ((string)($item['id'] ?? '') === $id) {
+            $toDelete = $item;
+            break;
+        }
+    }
 
     $filtered = array_values(array_filter($codes, static function (array $item) use ($id): bool {
         return (string)($item['id'] ?? '') !== $id;
     }));
 
     write_codes($filtered);
+
+    if (is_array($toDelete)) {
+        delete_generated_assets($toDelete);
+    }
 }
 
 function write_codes(array $codes): void
 {
     $json = json_encode($codes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     if ($json === false) {
-        throw new RuntimeException('Falha ao serializar os codigos.');
+        throw new RuntimeException('Falha ao serializar os códigos.');
     }
 
     if (file_put_contents(STORAGE_FILE, $json) === false) {
-        throw new RuntimeException('Falha ao gravar o storage de codigos.');
+        throw new RuntimeException('Falha ao gravar o storage de códigos.');
     }
 }
