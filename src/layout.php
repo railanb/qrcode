@@ -22,11 +22,11 @@
 <div class="bg-shape bg-1"></div>
 <div class="bg-shape bg-2"></div>
 
-<main class="container">
+<main class="container <?= $action === 'login' ? 'container-login' : '' ?>">
     <header class="topbar">
         <div>
             <h1>QRCode Studio Zanoello</h1>
-            <p>Gerador de QRCode com historico, upload de arquivos e exportacao em SVG.</p>
+            <p>Gerador de QRCode com histórico, upload de arquivos e exportação em SVG.</p>
             <?php if (is_authenticated()): ?>
                 <p class="session-user">Usuario logado: <strong><?= htmlspecialchars((string)($_SESSION['auth_user'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></p>
             <?php endif; ?>
@@ -34,7 +34,7 @@
         <?php if (is_authenticated()): ?>
             <nav>
                 <a class="<?= $action === 'generate' ? 'active' : '' ?>" href="?action=generate">Gerar QRCode</a>
-                <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codigos</a>
+                <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Códigos</a>
                 <form method="post" class="logout-form">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                     <button type="submit" class="nav-btn" name="do_logout" value="1">Sair</button>
@@ -52,7 +52,7 @@
     <?php endif; ?>
 
     <?php if ($action === 'login'): ?>
-        <section class="card panel">
+        <section class="card panel login-panel">
             <form method="post" autocomplete="off">
                 <h2>Login</h2>
                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">

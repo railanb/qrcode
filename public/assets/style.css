@@ -50,6 +50,26 @@ body {
     margin: 28px auto 48px;
 }
 
+.container-login {
+    width: min(900px, 92%);
+}
+
+.container-login .topbar {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container-login .alert {
+    width: min(560px, 100%);
+    margin: 0 auto 12px;
+}
+
+.login-panel {
+    width: min(560px, 100%);
+    margin: 0 auto;
+}
+
 .topbar {
     display: flex;
     justify-content: space-between;
