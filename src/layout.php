@@ -12,6 +12,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>QRCode Studio Zanoello</title>
+    <link rel="icon" href="/assets/favicon.ico?v=2" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
@@ -141,6 +142,9 @@
         </section>
     <?php endif; ?>
 </main>
+<footer class="site-footer" aria-label="Rodape">
+    <img src="/assets/logo.png" alt="Logo" class="footer-logo">
+</footer>
 <script>
 (function () {
     var typeEl = document.getElementById('type');
@@ -162,7 +166,7 @@
 
         if (type === 'text') {
             payloadEl.placeholder = 'Digite o texto que sera codificado';
-            payloadHintEl.textContent = 'Texto livre. Ex.: mensagem, chave PIX, codigo interno.';
+            payloadHintEl.textContent = 'Texto livre. Ex.: mensagem, codigo interno.';
             uploadEl.value = '';
             uploadEl.accept = '';
             return;

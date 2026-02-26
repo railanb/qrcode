@@ -18,14 +18,14 @@ function generate_qr_urls(string $payload): array
 
     $pngOptions = new QROptions([
         'outputType' => QRCode::OUTPUT_IMAGE_PNG,
-        'eccLevel' => QRCode::ECC_M,
+        'eccLevel' => QRCode::ECC_H,
         'scale' => 10,
         'imageBase64' => false,
     ]);
 
     $svgOptions = new QROptions([
         'outputType' => QRCode::OUTPUT_MARKUP_SVG,
-        'eccLevel' => QRCode::ECC_M,
+        'eccLevel' => QRCode::ECC_H,
         'scale' => 6,
         'imageBase64' => false,
     ]);
