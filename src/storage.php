@@ -125,6 +125,24 @@ function get_user_by_username(string $username): ?array
     return is_array($row) ? $row : null;
 }
 
+function get_user_by_id(int $id): ?array
+{
+    if ($id <= 0) {
+        return null;
+    }
+
+    $pdo = get_pdo();
+    $stmt = $pdo->prepare(
+        'SELECT id, username, password_hash, is_active, failed_login_count, locked_until, last_login_at, created_at, updated_at
+         FROM users WHERE id = :id LIMIT 1'
+    );
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $row = $stmt->fetch();
+
+    return is_array($row) ? $row : null;
+}
+
 function get_user_lock_remaining_seconds(string $username): int
 {
     $user = get_user_by_username($username);
@@ -181,6 +199,24 @@ function register_successful_login_for_user(int $userId): void
          SET failed_login_count = 0, locked_until = NULL, last_login_at = NOW(), updated_at = NOW()
          WHERE id = :id'
     );
+    $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
+    $stmt->execute();
+}
+
+function update_user_credentials(int $userId, string $newUsername, string $newPasswordHash): void
+{
+    if ($userId <= 0) {
+        throw new RuntimeException('Usuario invalido.');
+    }
+
+    $pdo = get_pdo();
+    $stmt = $pdo->prepare(
+        'UPDATE users
+         SET username = :username, password_hash = :password_hash, updated_at = NOW()
+         WHERE id = :id'
+    );
+    $stmt->bindValue(':username', $newUsername, PDO::PARAM_STR);
+    $stmt->bindValue(':password_hash', $newPasswordHash, PDO::PARAM_STR);
     $stmt->bindValue(':id', $userId, PDO::PARAM_INT);
     $stmt->execute();
 }

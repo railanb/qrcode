@@ -135,6 +135,21 @@ nav a:hover {
     border-color: var(--line);
 }
 
+.icon-link {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.icon-link svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
 .card {
     background: var(--card);
     border: 1px solid var(--line);

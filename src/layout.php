@@ -26,7 +26,7 @@
     <header class="topbar">
         <div>
             <h1>QRCode Studio Zanoello</h1>
-            <p>Gerador de QRCode com histórico, upload de arquivos e exportação em SVG.</p>
+            <p>Gerador de QRCode com historico, upload de arquivos e exportacao em SVG.</p>
             <?php if (is_authenticated()): ?>
                 <p class="session-user">Usuario logado: <strong><?= htmlspecialchars((string)($_SESSION['auth_user'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></p>
             <?php endif; ?>
@@ -34,10 +34,31 @@
         <?php if (is_authenticated()): ?>
             <nav>
                 <a class="<?= $action === 'generate' ? 'active' : '' ?>" href="?action=generate">Gerar QRCode</a>
-                <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Códigos</a>
+                <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codigos</a>
+                <a
+                    class="icon-link <?= $action === 'account' ? 'active' : '' ?>"
+                    href="?action=account"
+                    aria-label="Conta"
+                    title="Conta"
+                >
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.42 0-8 2.69-8 6v1h16v-1c0-3.31-3.58-6-8-6Z"/>
+                    </svg>
+                </a>
                 <form method="post" class="logout-form">
                     <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
-                    <button type="submit" class="nav-btn" name="do_logout" value="1">Sair</button>
+                    <button
+                        type="submit"
+                        class="nav-btn icon-link"
+                        name="do_logout"
+                        value="1"
+                        aria-label="Sair"
+                        title="Sair"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5v-2H5V5h5Zm8.59 8-2.3-2.29-1.42 1.41L14.76 10H9v2h5.76l-1.89 1.88 1.42 1.42L18.59 13a1 1 0 0 0 0-1.42Z"/>
+                        </svg>
+                    </button>
                 </form>
             </nav>
         <?php endif; ?>
@@ -166,6 +187,29 @@
                     </table>
                 </div>
             <?php endif; ?>
+        </section>
+    <?php endif; ?>
+
+    <?php if (is_authenticated() && $action === 'account'): ?>
+        <section class="card panel">
+            <form method="post" autocomplete="off">
+                <h2>Conta</h2>
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+
+                <label for="new_username">Novo usuario</label>
+                <input type="text" id="new_username" name="new_username" value="<?= htmlspecialchars((string)($_SESSION['auth_user'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
+
+                <label for="current_password">Senha atual</label>
+                <input type="password" id="current_password" name="current_password" required>
+
+                <label for="new_password">Nova senha</label>
+                <input type="password" id="new_password" name="new_password" minlength="8" required>
+
+                <label for="confirm_password">Confirmar nova senha</label>
+                <input type="password" id="confirm_password" name="confirm_password" minlength="8" required>
+
+                <button class="btn" type="submit" name="save_account" value="1">Salvar alteracoes</button>
+            </form>
         </section>
     <?php endif; ?>
 </main>

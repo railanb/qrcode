@@ -112,6 +112,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+
+    if (($action === 'account') && isset($_POST['save_account'])) {
+        if (!validate_csrf_token($csrfToken)) {
+            $error = 'Token de seguranca invalido.';
+        } else {
+            $currentPassword = (string)($_POST['current_password'] ?? '');
+            $newUsername = trim((string)($_POST['new_username'] ?? ''));
+            $newPassword = (string)($_POST['new_password'] ?? '');
+            $confirmPassword = (string)($_POST['confirm_password'] ?? '');
+
+            try {
+                change_authenticated_user_credentials($currentPassword, $newUsername, $newPassword, $confirmPassword);
+                $message = 'Dados da conta atualizados com sucesso.';
+            } catch (Throwable $e) {
+                $error = $e->getMessage();
+            }
+        }
+    }
 }
 
 if (is_authenticated() && $action === 'preview') {
