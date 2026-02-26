@@ -27,11 +27,20 @@
         <div>
             <h1>QRCode Studio Zanoello</h1>
             <p>Gerador de QRCode com historico, upload de arquivos e exportacao em SVG.</p>
+            <?php if (is_authenticated()): ?>
+                <p class="session-user">Usuario logado: <strong><?= htmlspecialchars((string)($_SESSION['auth_user'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></p>
+            <?php endif; ?>
         </div>
-        <nav>
-            <a class="<?= $action === 'generate' ? 'active' : '' ?>" href="?action=generate">Gerar QRCode</a>
-            <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codigos</a>
-        </nav>
+        <?php if (is_authenticated()): ?>
+            <nav>
+                <a class="<?= $action === 'generate' ? 'active' : '' ?>" href="?action=generate">Gerar QRCode</a>
+                <a class="<?= $action === 'my-codes' ? 'active' : '' ?>" href="?action=my-codes">Meus Codigos</a>
+                <form method="post" class="logout-form">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                    <button type="submit" class="nav-btn" name="do_logout" value="1">Sair</button>
+                </form>
+            </nav>
+        <?php endif; ?>
     </header>
 
     <?php if ($message !== null): ?>
@@ -42,10 +51,27 @@
         <div class="alert error"><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
 
-    <?php if ($action === 'generate'): ?>
+    <?php if ($action === 'login'): ?>
+        <section class="card panel">
+            <form method="post" autocomplete="off">
+                <h2>Login</h2>
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+
+                <button class="btn" type="submit" name="do_login" value="1">Entrar</button>
+            </form>
+        </section>
+    <?php endif; ?>
+
+    <?php if (is_authenticated() && $action === 'generate'): ?>
         <section class="card panel">
             <form method="post" enctype="multipart/form-data">
                 <h2>Novo QRCode</h2>
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                 <label for="type">Tipo</label>
                 <select name="type" id="type" required>
                     <?php foreach ($allowedTypes as $value => $label): ?>
@@ -68,7 +94,7 @@
         </section>
     <?php endif; ?>
 
-    <?php if ($action === 'preview'): ?>
+    <?php if (is_authenticated() && $action === 'preview'): ?>
         <section class="card panel preview">
             <h2>Preview</h2>
             <?php if ($previewCode !== null): ?>
@@ -90,7 +116,7 @@
         </section>
     <?php endif; ?>
 
-    <?php if ($action === 'my-codes'): ?>
+    <?php if (is_authenticated() && $action === 'my-codes'): ?>
         <section class="card panel">
             <h2>Meus Codigos</h2>
             <?php if ($codes === []): ?>
@@ -128,6 +154,7 @@
                                         <a class="btn tiny" href="<?= htmlspecialchars((string)$item['svg_url'], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener">SVG</a>
                                         <a class="btn tiny" href="?action=preview&id=<?= rawurlencode((string)$item['id']) ?>">Preview</a>
                                         <form method="post" onsubmit="return confirm('Remover este QRCode?');">
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(get_csrf_token(), ENT_QUOTES, 'UTF-8') ?>">
                                             <input type="hidden" name="delete_id" value="<?= htmlspecialchars((string)$item['id'], ENT_QUOTES, 'UTF-8') ?>">
                                             <button type="submit" class="btn tiny danger">Excluir</button>
                                         </form>
