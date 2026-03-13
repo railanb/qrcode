@@ -1,0 +1,16 @@
+{
+    "next_id": 2,
+    "users": [
+        {
+            "id": 1,
+            "username": "admin",
+            "password_hash": "$2y$10$mwwrVmPx5P/bRPM65cfZD.v/c8AXL.ainfeIYm9Gdqs0dfLTniaS.",
+            "is_active": 1,
+            "failed_login_count": 0,
+            "locked_until": null,
+            "last_login_at": "2026-03-13 17:06:18",
+            "created_at": "2026-03-13 16:56:19",
+            "updated_at": "2026-03-13 17:06:18"
+        }
+    ]
+}

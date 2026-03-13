@@ -1,0 +1,24 @@
+{
+    "codes": [
+        {
+            "id": "beb08b4088189c8e",
+            "type": "image",
+            "payload": "http://localhost:8000/uploads/20260313165701_91442041.png",
+            "source": "upload",
+            "uploaded_filename": "confederacao-brasileira-de-automobilismo.png",
+            "preview_url": "http://localhost:8000/generated/20260313165701_793af115.png",
+            "svg_url": "http://localhost:8000/generated/20260313165701_793af115.svg",
+            "created_at": "2026-03-13 16:57:02"
+        },
+        {
+            "id": "54878e1487163adf",
+            "type": "pdf",
+            "payload": "http://localhost:8000/uploads/20260313170633_d0879d27.pdf",
+            "source": "upload",
+            "uploaded_filename": "Orcamento_9434_ZANOELLO_INDUSTRIA_DE_TROFEUS_E_MEDALHAS_LTDA_13032026104640694.pdf",
+            "preview_url": "http://localhost:8000/generated/20260313170633_25ef5bd5.png",
+            "svg_url": "http://localhost:8000/generated/20260313170633_25ef5bd5.svg",
+            "created_at": "2026-03-13 17:06:33"
+        }
+    ]
+}
