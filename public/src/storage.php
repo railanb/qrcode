@@ -272,7 +272,7 @@ function ensure_default_user_exists(): void
 
 function get_storage_dir(): string
 {
-    return defined('APP_STORAGE_DIR') ? (string)APP_STORAGE_DIR : dirname(__DIR__) . '/storage';
+    return defined('APP_STORAGE_DIR') ? (string)APP_STORAGE_DIR : dirname(dirname(__DIR__)) . '/storage';
 }
 
 function get_users_file_path(): string

@@ -11,10 +11,12 @@ Sistema em PHP 7.4 para gerar e gerenciar QRCodes sem banco de dados.
 - No primeiro start, se nao existir usuario salvo, cria um usuario inicial.
 - Usuario inicial padrao: `admin`
 - Senha inicial padrao: `admin123`
-- Pode alterar o usuario/senha iniciais por variaveis de ambiente:
+- Pode alterar o usuario/senha iniciais em `config/app.php`
+- Tambem pode sobrescrever por variaveis de ambiente:
   - `APP_AUTH_USER`
   - `APP_AUTH_PASS`
 - Tambem pode alterar a pasta privada de dados por:
+  - `config/app.php`
   - `APP_STORAGE_DIR`
 
 ## Rodar local
@@ -22,12 +24,15 @@ Sistema em PHP 7.4 para gerar e gerenciar QRCodes sem banco de dados.
 ```bash
 composer install
 ```
-2. Rode:
+2. Se quiser, ajuste o login inicial em `config/app.php`.
+3. Rode:
 ```bash
 php -S localhost:8000 -t public
 ```
 
 ## Rodar com Docker
+Docker fica como apoio de desenvolvimento. O login inicial continua vindo de `config/app.php`.
+
 Subir app:
 ```bash
 docker compose up --build
@@ -71,7 +76,12 @@ docker compose down
 - Arquivos de dados fora da pasta publica
 - Escrita com `flock()` para reduzir risco de corrupcao
 
+## Dependencias
+- O autoload do Composer fica em `public/vendor/autoload.php`
+- Para deploy sem Composer no servidor, envie tambem a pasta `public/vendor/`
+
 ## Estrutura
+- `config/app.php`: configuracao inicial de login e storage
 - `public/index.php`: entrada e controle de telas/login
 - `public/src/auth.php`: autenticacao e sessao
 - `public/src/storage.php`: persistencia local em arquivos JSON privados

@@ -1,2 +1,3 @@
-vendor/
+# Em producao o projeto nao sera montado por container, entao as dependencias
+# do Composer e o public/vendor/autoload.php podem ser versionados.
 !storage/.gitkeep

@@ -4,10 +4,6 @@ services:
     container_name: qrcode-php74
     ports:
       - "8000:8000"
-    environment:
-      APP_AUTH_USER: admin
-      APP_AUTH_PASS: admin123
-      APP_STORAGE_DIR: /app/storage
     volumes:
       - ./storage:/app/storage
       - ./public/uploads:/app/public/uploads

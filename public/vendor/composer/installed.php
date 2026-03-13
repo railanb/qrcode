@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'qrcode/studio',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'ff06cc569684d81cb3fd295af67547e248fd3c3e',
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => false,
+    ),
+    'versions' => array(
+        'chillerlan/php-qrcode' => array(
+            'pretty_version' => '4.4.2',
+            'version' => '4.4.2.0',
+            'reference' => '345ed8e4ffb56e6b3fcd9f42e3970b9026fa6ce4',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../chillerlan/php-qrcode',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'chillerlan/php-settings-container' => array(
+            'pretty_version' => '3.2.1',
+            'version' => '3.2.1.0',
+            'reference' => '95ed3e9676a1d47cab2e3174d19b43f5dbf52681',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../chillerlan/php-settings-container',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'qrcode/studio' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'ff06cc569684d81cb3fd295af67547e248fd3c3e',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);
