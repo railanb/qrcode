@@ -78,6 +78,12 @@ function attempt_login(string $username, string $password): bool
     }
 
     register_successful_login_for_user((int)$user['id']);
+    if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+        $rehash = password_hash($password, PASSWORD_DEFAULT);
+        if (is_string($rehash) && $rehash !== '') {
+            update_user_credentials((int)$user['id'], (string)$user['username'], $rehash);
+        }
+    }
     session_regenerate_id(true);
     $_SESSION['authenticated'] = true;
     $_SESSION['auth_user_id'] = (int)$user['id'];
@@ -108,13 +114,7 @@ function change_authenticated_user_credentials(string $currentPassword, string $
     }
 
     $newUsername = trim($newUsername);
-    if ($newUsername === '') {
-        throw new RuntimeException('Informe o novo usuario.');
-    }
-
-    if (strlen($newUsername) < 3) {
-        throw new RuntimeException('O usuario deve ter ao menos 3 caracteres.');
-    }
+    validate_username_or_fail($newUsername);
 
     if ($newPassword === '') {
         throw new RuntimeException('Informe a nova senha.');
@@ -161,4 +161,23 @@ function logout_user(): void
     }
 
     session_destroy();
+}
+
+function validate_username_or_fail(string $username): void
+{
+    if ($username === '') {
+        throw new RuntimeException('Informe o novo usuario.');
+    }
+
+    if (strlen($username) < 3) {
+        throw new RuntimeException('O usuario deve ter ao menos 3 caracteres.');
+    }
+
+    if (strlen($username) > 64) {
+        throw new RuntimeException('O usuario deve ter no maximo 64 caracteres.');
+    }
+
+    if (preg_match('/^[A-Za-z0-9_.-]+$/', $username) !== 1) {
+        throw new RuntimeException('Use apenas letras, numeros, ponto, traco ou sublinhado no usuario.');
+    }
 }

@@ -5,6 +5,10 @@ declare(strict_types=1);
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
     || ((string)($_SERVER['SERVER_PORT'] ?? '') === '443');
 
+ini_set('session.use_strict_mode', '1');
+ini_set('session.cookie_httponly', '1');
+ini_set('session.use_only_cookies', '1');
+
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,
@@ -22,11 +26,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $appAuthUser = getenv('APP_AUTH_USER');
 $appAuthPass = getenv('APP_AUTH_PASS');
-$dbHost = getenv('DB_HOST');
-$dbPort = getenv('DB_PORT');
-$dbName = getenv('DB_NAME');
-$dbUser = getenv('DB_USER');
-$dbPassword = getenv('DB_PASSWORD');
+$appStorageDir = getenv('APP_STORAGE_DIR');
 
 if (!defined('DEFAULT_ADMIN_USERNAME')) {
     define('DEFAULT_ADMIN_USERNAME', ($appAuthUser !== false && $appAuthUser !== '') ? $appAuthUser : 'admin');
@@ -43,20 +43,13 @@ if (!defined('AUTH_MAX_LOGIN_ATTEMPTS')) {
 if (!defined('AUTH_LOGIN_LOCK_SECONDS')) {
     define('AUTH_LOGIN_LOCK_SECONDS', 300);
 }
-if (!defined('DB_HOST')) {
-    define('DB_HOST', ($dbHost !== false && $dbHost !== '') ? $dbHost : '127.0.0.1');
-}
-if (!defined('DB_PORT')) {
-    define('DB_PORT', ($dbPort !== false && $dbPort !== '') ? $dbPort : '3306');
-}
-if (!defined('DB_NAME')) {
-    define('DB_NAME', ($dbName !== false && $dbName !== '') ? $dbName : 'qrcode');
-}
-if (!defined('DB_USER')) {
-    define('DB_USER', ($dbUser !== false && $dbUser !== '') ? $dbUser : 'qrcode');
-}
-if (!defined('DB_PASSWORD')) {
-    define('DB_PASSWORD', ($dbPassword !== false) ? $dbPassword : 'qrcode');
+if (!defined('APP_STORAGE_DIR')) {
+    define(
+        'APP_STORAGE_DIR',
+        ($appStorageDir !== false && $appStorageDir !== '')
+            ? $appStorageDir
+            : dirname(__DIR__) . '/storage'
+    );
 }
 
 require_once __DIR__ . '/../vendor/autoload.php';
