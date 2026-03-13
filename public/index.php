@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../src/bootstrap.php';
+require_once __DIR__ . '/src/bootstrap.php';
 
 $action = (string)($_GET['action'] ?? (is_authenticated() ? 'generate' : 'login'));
 $message = null;
@@ -163,4 +163,4 @@ $allowedTypes = [
     'image' => 'Imagem (URL ou Upload)',
 ];
 
-include __DIR__ . '/../src/layout.php';
+include __DIR__ . '/src/layout.php';

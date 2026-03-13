@@ -73,11 +73,11 @@ docker compose down
 
 ## Estrutura
 - `public/index.php`: entrada e controle de telas/login
-- `src/auth.php`: autenticacao e sessao
-- `src/storage.php`: persistencia local em arquivos JSON privados
-- `src/qr.php`: regra de geracao/validacao do payload
-- `src/layout.php`: interface das telas
-- `src/bootstrap.php`: bootstrap e inicializacao do armazenamento
+- `public/src/auth.php`: autenticacao e sessao
+- `public/src/storage.php`: persistencia local em arquivos JSON privados
+- `public/src/qr.php`: regra de geracao/validacao do payload
+- `public/src/layout.php`: interface das telas
+- `public/src/bootstrap.php`: bootstrap e inicializacao do armazenamento
 - `public/assets/style.css`: estilo da aplicacao
 - `storage/`: dados privados da aplicacao
 - `public/uploads/`: arquivos enviados para gerar QRCode por upload

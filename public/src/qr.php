@@ -204,12 +204,12 @@ function detect_mime_type(string $tmpName): string
 
 function get_upload_dir(): string
 {
-    return dirname(__DIR__) . '/public/uploads';
+    return dirname(__DIR__) . '/uploads';
 }
 
 function get_generated_dir(): string
 {
-    return dirname(__DIR__) . '/public/generated';
+    return dirname(__DIR__) . '/generated';
 }
 
 function build_upload_public_url(string $storedName): string

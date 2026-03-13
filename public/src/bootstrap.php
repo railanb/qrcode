@@ -48,11 +48,11 @@ if (!defined('APP_STORAGE_DIR')) {
         'APP_STORAGE_DIR',
         ($appStorageDir !== false && $appStorageDir !== '')
             ? $appStorageDir
-            : dirname(__DIR__) . '/storage'
+            : dirname(dirname(__DIR__)) . '/storage'
     );
 }
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/qr.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/storage.php';
